@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "biblioteca.h"
+
 int cadastrar_cliente(ListaDeClientes *lt){
     //lendo o nome do usuario
     printf("Digite seu nome (maximo de 30 caracteres): ");
@@ -31,4 +32,43 @@ int cadastrar_cliente(ListaDeClientes *lt){
     }*/
 
     return 0;
+}
+
+//Função de lista
+/*int listar_clientes(ListaDeClientes*lt){
+
+    //Verificando se existe alguma tarefa cadastrada
+    if (lt->qtd == 0){
+        printf("\nNao existe nenhum cadastro na base de dados.\n");
+    }
+        //Caso exista
+    else {
+        //Printando todos os clientes
+        for (int i = 0; i < lt->qtd; i++){
+
+            printf("Nome: %d\n", lt->clientes[i].nome);
+            printf("CPF : %s\n", lt->clientes[i].cpf);
+            printf("Tipo da Conta : %s\n", lt->clientes[i].tipo_conta);
+            printf("Saldo Atual : %s\n", lt->clientes[i].valor_inicial);
+            printf("Senha : %s\n", lt->clientes[i].senha);
+        }
+    }
+    return 0;
+}*/
+
+void listar_clientes(ListaDeClientes lt) {
+    //Verificando se existe algum cadastro
+    if (lt.qtd == 0){
+        printf("\nNao existe nenhum cadastro na base de dados.\n");
+    }
+        //Caso exista
+    else {
+    for (int i = 0; i < lt.qtd; i++) {
+        printf("Nome: %s\n", lt.clientes[i].nome);
+        printf("CPF : %s\n", lt.clientes[i].cpf);
+        printf("Tipo da Conta : %s\n", lt.clientes[i].tipo_conta);
+        printf("Saldo Atual : %s\n", lt.clientes[i].valor_inicial);
+        printf("Senha : %s\n", lt.clientes[i].senha);
+    }
+    }
 }

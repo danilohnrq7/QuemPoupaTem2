@@ -38,6 +38,7 @@ int main()
                 break;
             case '3':
                 printf("Entrou na operacao 'Listar Clientes'\n");
+                listar_clientes(ListaGeral);
                 break;
             case '4':
                 printf("Entrou na operacao 'Debito'\n");
