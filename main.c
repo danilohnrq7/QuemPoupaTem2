@@ -4,6 +4,8 @@
 int main()
 {
     ListaDeClientes ListaGeral;
+    char cpf_excluir[15];
+    char senha_excluir[15];
 
     printf("\n>>>>> Quem Poupa Tem 2.0 <<<<<\n");
     printf("Seja bem-vindo ao banco Quem Poupa Tem 2.0!!!\n\n");
@@ -30,30 +32,31 @@ int main()
                 printf("Obrigado por utilizar o Quem Poupa Tem! Volte sempre!");
                 return 0;
             case '1':
-                printf("Entrou na operacao 'Novo Cliente'\n");
+                printf("\nEntrou na operacao 'Novo Cliente'\n");
                 cadastrar_cliente(&ListaGeral);
                 break;
             case '2':
-                printf("Entrou na operacao 'Excluir Conta'\n");
+                printf("\nEntrou na operacao 'Excluir Conta'\n");
+                excluir_conta(&ListaGeral, cpf_excluir, senha_excluir);
                 break;
             case '3':
-                printf("Entrou na operacao 'Listar Clientes'\n");
+                printf("\nEntrou na operacao 'Listar Clientes'\n");
                 listar_clientes(ListaGeral);
                 break;
             case '4':
-                printf("Entrou na operacao 'Debito'\n");
+                printf("\nEntrou na operacao 'Debito'\n");
                 break;
             case '5':
-                printf("Entrou na operacao 'Deposito'\n");
+                printf("\nEntrou na operacao 'Deposito'\n");
                 break;
             case '6':
-                printf("Entrou na operacao 'Extrato'\n");
+                printf("\nEntrou na operacao 'Extrato'\n");
                 break;
             case '7':
-                printf("Entrou na operacao 'Transferencia'\n");
+                printf("\nEntrou na operacao 'Transferencia'\n");
                 break;
             default:
-                printf("Opcao invalida! Tente novamente");
+                printf("\nOpcao invalida! Tente novamente");
         }
         printf("\nPressione ENTER para prosseguir\n\n");
         //limpa o buffer

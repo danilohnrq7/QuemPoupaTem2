@@ -7,7 +7,7 @@ typedef struct {
     char cpf[12];
     char tipo_conta[7];
     char valor_inicial[12];
-    char senha[11]
+    char senha[11];
 }Cliente; // Nomeando este tipo de struct como: Cliente
 
 
@@ -22,5 +22,7 @@ typedef struct {
 int cadastrar_cliente(ListaDeClientes *lt);
 
 void listar_clientes(ListaDeClientes lt);
+
+void excluir_conta(ListaDeClientes *lt, char *cpf_excluir, char *senha_excluir);
 
 #endif //QUEMPOUPATEM2_BIBLIOTECA_H
