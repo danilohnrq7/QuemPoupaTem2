@@ -45,7 +45,7 @@ int cadastrar_cliente(ListaDeClientes *lt){
 
 
     //lendo o nome do usuario
-    printf("Digite seu nome (maximo de 30 caracteres): ");
+    printf("Digite seu nome (maximo de 60 caracteres): ");
     scanf(" %[^\n]",lt->clientes[lt->qtd].nome);
 
 
