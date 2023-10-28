@@ -24,7 +24,7 @@ int main()
 
         //switch case para um menu funcional, chama a funcao respectiva ao numero escolhido
         switch (opcao) {
-            case '0':
+            case '0':             
                 printf("Obrigado por utilizar o Quem Poupa Tem! Volte sempre!");
                 return 0;
             case '1':
@@ -54,11 +54,12 @@ int main()
                 break;
             default:
                 printf("\nOpcao invalida! Tente novamente");
-        };
+        }
+        printf("\nPressione ENTER para prosseguir\n\n");
         //limpa o buffer
         getchar();
         continue;
-
-        //loop infinito enquanto opcao =1, reinicia o menu ao termino de uma operacao
+        
+    //loop infinito enquanto opcao =1, reinicia o menu ao termino de uma operacao
     }while (opcao != '0');
 }

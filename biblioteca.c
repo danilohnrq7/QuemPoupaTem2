@@ -14,18 +14,18 @@ int validar_cpf(char* cpf, ListaDeClientes *lt) {
 
 
 int validar_cpf_senha(char* cpf_origem, char* senha_origem, ListaDeClientes* lista_clientes) {
-    int validador = 0;
+  int validador = 0;
     for (int x = 0; x < lista_clientes->qtd; x++) {
         if (strcmp(lista_clientes->clientes[x].cpf, cpf_origem) == 0 && strcmp(lista_clientes->clientes[x].senha, senha_origem) == 0) {
             validador = 1;
         }
     }
-    if (validador == 1){
-        return 1;
-    }
-    else {
-        return 0;
-    }
+  if (validador == 1){
+    return 1;
+  }
+  else {
+      return 0;
+  }
 }
 
 
@@ -91,7 +91,7 @@ void listar_clientes(ListaDeClientes lt) {
             ;
         }
     }
-    printf("\nPressione ENTER para prosseguir\n\n");
+  printf("\nPressione ENTER para prosseguir\n\n");
 }
 
 
@@ -125,36 +125,36 @@ void excluir_conta(ListaDeClientes *lt, char *cpf_excluir, char *senha_excluir) 
 }
 
 float debito(ListaDeClientes *lt){
-    char cpf_verif[15];
-    char senha_verif[11];
-    float valor;
+  char cpf_verif[15];
+  char senha_verif[11];
+  float valor;
 
-    printf("Digite o valor que deseja debitar:\n");
-    scanf("%f", &valor);
-    getchar();
+  printf("Digite o valor que deseja debitar:\n");
+  scanf("%f", &valor);
+  getchar();
 
-    printf("Digite o CPF do cliente:\n");
-    scanf("%[^\n]", cpf_verif);
-    getchar();
+  printf("Digite o CPF do cliente:\n");
+  scanf("%[^\n]", cpf_verif);
+  getchar();
+  
+  printf("Digite a SENHA do cliente:\n");
+  scanf("%[^\n]", senha_verif);
+  getchar();
 
-    printf("Digite a SENHA do cliente:\n");
-    scanf("%[^\n]", senha_verif);
-    getchar();
-
-    int indice_cliente = -1;
-    for (int i = 0; i < lt->qtd; i++) {
-        if(validar_cpf_senha(cpf_verif, senha_verif, lt) == 1){
-            if(valor > lt->clientes[i].saldo){
-                printf("Saldo insuficiente");
-            }
-            else{
-                lt->clientes[i].saldo -= valor;
-                printf("O valor %.2f foi debitado com sucesso.\nSaldo atual: %.2f", valor, lt->clientes[i].saldo);
-
-            }
-        }
-        else{
-            printf("CPF ou SENHA incorretos");
-        }
+  int indice_cliente = -1;
+  for (int i = 0; i < lt->qtd; i++) {
+    if(validar_cpf_senha(cpf_verif, senha_verif, lt) == 1){
+    if(valor > lt->clientes[i].saldo){
+      printf("Saldo insuficiente");
+  }
+    else{
+      lt->clientes[i].saldo -= valor;
+        printf("O valor %.2f foi debitado com sucesso.\nSaldo atual: %.2f", valor, lt->clientes[i].saldo);
+      
     }
+}
+  else{
+    printf("CPF ou SENHA incorretos");
+}
+}
 };
