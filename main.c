@@ -41,6 +41,7 @@ int main()
                 break;
             case '4':
                 printf("\nEntrou na operacao 'Debito'\n");
+                debito(&ListaGeral);
                 break;
             case '5':
                 printf("\nEntrou na operacao 'Deposito'\n");
