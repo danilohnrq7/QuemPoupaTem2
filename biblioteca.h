@@ -3,10 +3,10 @@
 
 //Definindo a struct do cadastro de um clientes
 typedef struct {
-    char nome[30];
+    char nome[60];
     char cpf[12];
     char tipo_conta[7];
-    char valor_inicial[12];
+    float saldo;
     char senha[11];
 }Cliente; // Nomeando este tipo de struct como: Cliente
 
@@ -24,5 +24,11 @@ int cadastrar_cliente(ListaDeClientes *lt);
 void listar_clientes(ListaDeClientes lt);
 
 void excluir_conta(ListaDeClientes *lt, char *cpf_excluir, char *senha_excluir);
+
+int validar_cpf(char* cpf, ListaDeClientes *lt);
+
+int validar_cpf_senha(char* cpf_origem, char* senha_origem, ListaDeClientes* lista_clientes);
+
+float debito(ListaDeClientes *lt);
 
 #endif //QUEMPOUPATEM2_BIBLIOTECA_H
