@@ -6,26 +6,21 @@
 int validar_cpf(char* cpf, ListaDeClientes *lt) {
     for (int x = 0; x < lt->qtd; x++) {
         if (strcmp(lt->clientes[x].cpf, cpf) == 0) {
-            return 1; // CPF já existe na lista
+            return x; // CPF já existe na lista
         }
     }
-    return 0; // CPF não existe na lista
+    return -1; // CPF não existe na lista
 }
 
 
 int validar_cpf_senha(char* cpf_origem, char* senha_origem, ListaDeClientes* lista_clientes) {
-  int validador = 0;
+  int validador = -1;
     for (int x = 0; x < lista_clientes->qtd; x++) {
         if (strcmp(lista_clientes->clientes[x].cpf, cpf_origem) == 0 && strcmp(lista_clientes->clientes[x].senha, senha_origem) == 0) {
-            validador = 1;
+            validador = x;
         }
     }
-  if (validador == 1){
-    return 1;
-  }
-  else {
-      return 0;
-  }
+    return validador;
 }
 
 
