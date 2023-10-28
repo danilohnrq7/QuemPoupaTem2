@@ -55,7 +55,7 @@ int cadastrar_cliente(ListaDeClientes *lt){
 
     //Lendo o valor inicial da conta
     printf("Digite o valor incial da conta (primeiro deposito): ");
-    scanf(" %[^\n]",lt->clientes[lt->qtd].valor_inicial);
+    scanf("%f",&lt->clientes[lt->qtd].saldo);
 
     //Lendo a senha do usuario
     printf("Crie uma senha para sua conta (maximo 10 caracteres): ");
@@ -85,7 +85,7 @@ void listar_clientes(ListaDeClientes lt) {
             printf("Nome: %s\n", lt.clientes[i].nome);
             printf("CPF : %s\n", lt.clientes[i].cpf);
             printf("Tipo da Conta : %s\n", lt.clientes[i].tipo_conta);
-            printf("Saldo Atual : %s\n", lt.clientes[i].valor_inicial);
+            printf("Saldo Atual : %.2f\n", lt.clientes[i].saldo);
             printf("Senha : %s\n\n", lt.clientes[i].senha);
         }
     }
@@ -113,7 +113,7 @@ void excluir_conta(ListaDeClientes *lt, char *cpf_excluir, char *senha_excluir) 
             strcpy(lt->clientes[i].nome, lt->clientes[i + 1].nome);
             strcpy(lt->clientes[i].cpf, lt->clientes[i + 1].cpf);
             strcpy(lt->clientes[i].tipo_conta, lt->clientes[i + 1].tipo_conta);
-            strcpy(lt->clientes[i].valor_inicial, lt->clientes[i + 1].valor_inicial);
+            lt->clientes[i].saldo = lt->clientes[i + 1].saldo;
             strcpy(lt->clientes[i].senha, lt->clientes[i + 1].senha);
         }
         lt->qtd--;
