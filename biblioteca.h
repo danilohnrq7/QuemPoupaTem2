@@ -21,9 +21,9 @@ typedef struct {
 //Função para cadastrar tarefas, que recebe um ponteiro de ListaDeTarefas como parâmetro e retorna um inteiro
 int cadastrar_cliente(ListaDeClientes *lt);
 
-void listar_clientes(ListaDeClientes lt);
+int listar_clientes(ListaDeClientes lt);
 
-void excluir_conta(ListaDeClientes *lt, char *cpf_excluir, char *senha_excluir);
+int excluir_conta(ListaDeClientes *lt, char *cpf_excluir, char *senha_excluir);
 
 int validar_cpf(char* cpf, ListaDeClientes *lt);
 
