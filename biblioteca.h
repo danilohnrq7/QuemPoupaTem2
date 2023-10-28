@@ -25,4 +25,8 @@ void listar_clientes(ListaDeClientes lt);
 
 void excluir_conta(ListaDeClientes *lt, char *cpf_excluir, char *senha_excluir);
 
+int validar_cpf(char* cpf, ListaDeClientes *lt);
+
+int validar_cpf_senha(char* cpf_origem, char* senha_origem, ListaDeClientes* lista_clientes);
+
 #endif //QUEMPOUPATEM2_BIBLIOTECA_H
