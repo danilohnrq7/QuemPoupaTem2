@@ -14,13 +14,18 @@ int validar_cpf(char* cpf, ListaDeClientes *lt) {
 
 
 int validar_cpf_senha(char* cpf_origem, char* senha_origem, ListaDeClientes* lista_clientes) {
+  int validador = 0;
     for (int x = 0; x < lista_clientes->qtd; x++) {
         if (strcmp(lista_clientes->clientes[x].cpf, cpf_origem) == 0 && strcmp(lista_clientes->clientes[x].senha, senha_origem) == 0) {
-            return 1;
-        } else {
-            return 0;
+            validador = 1;
         }
     }
+  if (validador == 1){
+    return 1;
+  }
+  else {
+      return 0;
+  }
 }
 
 
