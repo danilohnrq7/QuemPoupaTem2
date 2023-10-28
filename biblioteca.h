@@ -29,4 +29,6 @@ int validar_cpf(char* cpf, ListaDeClientes *lt);
 
 int validar_cpf_senha(char* cpf_origem, char* senha_origem, ListaDeClientes* lista_clientes);
 
+float debito(ListaDeClientes *lt);
+
 #endif //QUEMPOUPATEM2_BIBLIOTECA_H
