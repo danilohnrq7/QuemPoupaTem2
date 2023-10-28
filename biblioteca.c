@@ -26,13 +26,15 @@ int validar_cpf_senha(char* cpf_origem, char* senha_origem, ListaDeClientes* lis
 
 int cadastrar_cliente(ListaDeClientes *lt){
     char cpf_verif[15];
-
+    int validacao_cpf;
     // Lendo o CPF do usuário
     printf("Digite o seu cpf: ");
     scanf(" %[^\n]", cpf_verif);
 
+    validacao_cpf = validar_cpf(cpf_verif, lt);
+
     // Verificando se o CPF já está em uso
-    if (validar_cpf(cpf_verif, lt) == 1) {
+    if (validar_cpf(cpf_verif, lt) != -1) {
         printf("CPF já está em uso. Tente novamente com um CPF diferente.\n");
         return 1; // Retorna 1 para indicar falha no cadastro
     }
@@ -65,14 +67,17 @@ int cadastrar_cliente(ListaDeClientes *lt){
         printf("\nErro ao tentar executar a funcao :(\n");
     }*/
 
-    return 0;
+    printf("\nSeja bem vindo %s! Seu cadastro foi realizado com sucesso\n",lt->clientes[lt->qtd-1].nome);
+  
+    return 0; // Retorna 0 para indicar sucesso no cadastro
 }
 
 
-void listar_clientes(ListaDeClientes lt) {
+int listar_clientes(ListaDeClientes lt) {
     //Verificando se existe algum cadastro
     if (lt.qtd == 0){
         printf("\nNao existe nenhum cadastro na base de dados.\n");
+      return 1;
     }
         //Caso exista
     else {
@@ -82,27 +87,25 @@ void listar_clientes(ListaDeClientes lt) {
             printf("Tipo da Conta : %s\n", lt.clientes[i].tipo_conta);
             printf("Saldo Atual : %.2f\n", lt.clientes[i].saldo);
             printf("Senha : %s\n\n", lt.clientes[i].senha);
+            ;
         }
     }
+  printf("\nPressione ENTER para prosseguir\n\n");
+  return 0;
 }
 
 
-void excluir_conta(ListaDeClientes *lt, char *cpf_excluir, char *senha_excluir) {
+int excluir_conta(ListaDeClientes *lt, char *cpf_excluir, char *senha_excluir) {
     printf("Digite o CPF do cliente a ser excluído: ");
     scanf(" %[^\n]", cpf_excluir);
     printf("Digite a senha do cliente: ");
     scanf(" %[^\n]", senha_excluir);
 
-    int posicao_excluir = -1;
-    for (int i = 0; i < lt->qtd; i++) {
-        if (strcmp(lt->clientes[i].cpf, cpf_excluir) == 0 && strcmp(lt->clientes[i].senha, senha_excluir) == 0) {
-            posicao_excluir = i;
-            break;
-        }
-    }
+    int posicao_excluir = validar_cpf_senha(cpf_excluir, senha_excluir, lt);
 
     if (posicao_excluir == -1) {
-        printf("CPF ou senha incorretos, ou conta não encontrada na lista de clientes.\n");
+        printf("CPF ou senha incorretos, ou conta não encontrada na lista de clientes.\n\n");
+      return 1;
     } else {
         for (int i = posicao_excluir; i < lt->qtd - 1; i++) {
             strcpy(lt->clientes[i].nome, lt->clientes[i + 1].nome);
@@ -112,6 +115,7 @@ void excluir_conta(ListaDeClientes *lt, char *cpf_excluir, char *senha_excluir) 
             strcpy(lt->clientes[i].senha, lt->clientes[i + 1].senha);
         }
         lt->qtd--;
-        printf("Cliente com o CPF %s foi removido com sucesso.\n", cpf_excluir);
+        printf("\nCliente com o CPF %s foi removido com sucesso.\n\n", cpf_excluir);
+      return 0;
     }
 }
