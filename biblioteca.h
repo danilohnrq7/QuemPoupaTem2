@@ -29,6 +29,10 @@ int validar_cpf(char* cpf, ListaDeClientes *lt);
 
 int validar_cpf_senha(char* cpf_origem, char* senha_origem, ListaDeClientes* lista_clientes);
 
+int debitar(ListaDeClientes *lt, int indice_cliente, float valor);
+
+int depositar(ListaDeClientes *lt, int indice_cliente, float valor);
+
 int debito(ListaDeClientes *lt);
 
 
