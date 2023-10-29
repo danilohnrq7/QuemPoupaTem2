@@ -23,6 +23,16 @@ int validar_cpf_senha(char* cpf_origem, char* senha_origem, ListaDeClientes* lis
     return validador;
 }
 
+int debitar(ListaDeClientes *lt, int indice_cliente, float valor){
+  lt->clientes[indice_cliente].saldo -= valor;
+  return 0;
+}
+
+int depositar(ListaDeClientes *lt, int indice_cliente, float valor){
+  lt->clientes[indice_cliente].saldo += valor;
+  return 0;
+}
+
 
 int cadastrar_cliente(ListaDeClientes *lt){
     char cpf_verif[15];
