@@ -92,6 +92,7 @@ int listar_clientes(ListaDeClientes lt) {
     }
   printf("\nPressione ENTER para prosseguir\n\n");
   return 0;
+
 }
 
 
@@ -105,7 +106,9 @@ int excluir_conta(ListaDeClientes *lt, char *cpf_excluir, char *senha_excluir) {
 
     if (posicao_excluir == -1) {
         printf("CPF ou senha incorretos, ou conta não encontrada na lista de clientes.\n\n");
+
       return 1;
+
     } else {
         for (int i = posicao_excluir; i < lt->qtd - 1; i++) {
             strcpy(lt->clientes[i].nome, lt->clientes[i + 1].nome);
@@ -116,6 +119,7 @@ int excluir_conta(ListaDeClientes *lt, char *cpf_excluir, char *senha_excluir) {
         }
         lt->qtd--;
         printf("\nCliente com o CPF %s foi removido com sucesso.\n\n", cpf_excluir);
+
       return 0;
     }
 }
@@ -154,3 +158,38 @@ int debito(ListaDeClientes *lt){
     return 1;
   }
 }
+
+float debito(ListaDeClientes *lt){
+  char cpf_verif[15];
+  char senha_verif[11];
+  float valor;
+
+  printf("Digite o valor que deseja debitar:\n");
+  scanf("%f", &valor);
+  getchar();
+
+  printf("Digite o CPF do cliente:\n");
+  scanf("%[^\n]", cpf_verif);
+  getchar();
+  
+  printf("Digite a SENHA do cliente:\n");
+  scanf("%[^\n]", senha_verif);
+  getchar();
+
+  int indice_cliente = -1;
+  for (int i = 0; i < lt->qtd; i++) {
+    if(validar_cpf_senha(cpf_verif, senha_verif, lt) == 1){
+    if(valor > lt->clientes[i].saldo){
+      printf("Saldo insuficiente");
+  }
+    else{
+      lt->clientes[i].saldo -= valor;
+        printf("O valor %.2f foi debitado com sucesso.\nSaldo atual: %.2f", valor, lt->clientes[i].saldo);
+      
+    }
+}
+  else{
+    printf("CPF ou SENHA incorretos");
+}
+}
+};
