@@ -23,6 +23,16 @@ int validar_cpf_senha(char* cpf_origem, char* senha_origem, ListaDeClientes* lis
     return validador;
 }
 
+int debitar(ListaDeClientes *lt, int indice_cliente, float valor){
+  lt->clientes[indice_cliente].saldo -= valor;
+  return 0;
+}
+
+int depositar(ListaDeClientes *lt, int indice_cliente, float valor){
+  lt->clientes[indice_cliente].saldo += valor;
+  return 0;
+}
+
 
 int cadastrar_cliente(ListaDeClientes *lt){
     char cpf_verif[15];
@@ -178,18 +188,96 @@ float debito(ListaDeClientes *lt){
 
   int indice_cliente = -1;
   for (int i = 0; i < lt->qtd; i++) {
-    if(validar_cpf_senha(cpf_verif, senha_verif, lt) == 1){
-    if(valor > lt->clientes[i].saldo){
-      printf("Saldo insuficiente");
-  }
-    else{
-      lt->clientes[i].saldo -= valor;
-        printf("O valor %.2f foi debitado com sucesso.\nSaldo atual: %.2f", valor, lt->clientes[i].saldo);
-      
+        if(validar_cpf_senha(cpf_verif, senha_verif, lt) == 1){
+            if(valor > lt->clientes[i].saldo){
+              printf("Saldo insuficiente");
+            }
+            else{
+              verif_func = debitar(lt, indice_cliente, valor);
+              printf("O valor %.2f foi debitado com sucesso.\nSaldo atual: %.2f", valor, lt->clientes[i].saldo);
+              
+            }
+        }
+        else{
+            printf("CPF ou SENHA incorretos");
+        }
     }
-}
-  else{
-    printf("CPF ou SENHA incorretos");
-}
-}
 };
+
+int deposito(ListaDeClientes *lt){
+  char cpf_verif[15];
+  float valor;
+  int verif_func;
+
+  printf("Digite o valor que deseja depositar:\n");
+  scanf("%f", &valor);
+  getchar();
+
+  printf("Digite o CPF do cliente:\n");
+  scanf("%[^\n]", cpf_verif);
+  getchar();
+
+
+  int indice_cliente = validar_cpf(cpf_verif, lt);
+  if (indice_cliente != -1){
+        verif_func = depositar(lt, indice_cliente, valor);
+        printf("O valor %.2f foi depositado com sucesso.\nSaldo atual: %.2f", valor, lt->clientes[indice_cliente].saldo);
+      return 0;
+  }
+  else{
+    printf("CPF incorreto");
+    return 1;
+  }
+}
+
+int transferencia(ListaDeClientes *lt){
+  char cpf_verif_ori[15];
+  char cpf_verif_dest[15];
+  char senha_verif_ori[11];
+  int indice_cliente_ori;
+  int indice_cliente_dest;
+  float valor;
+  int verif_func;
+
+  printf("Digite o valor que deseja debitar:\n");
+  scanf("%f", &valor);
+  getchar();
+
+  printf("Digite o CPF do cliente origem:\n");
+  scanf("%[^\n]", cpf_verif_ori);
+  getchar();
+
+  printf("Digite a SENHA do cliente origem:\n");
+  scanf("%[^\n]", senha_verif_ori);
+  getchar();
+
+  printf("Digite o CPF do cliente destino:\n");
+  scanf("%[^\n]", cpf_verif_dest);
+  getchar();
+
+  indice_cliente_ori = validar_cpf_senha(cpf_verif_ori, senha_verif_ori, lt);
+  if (indice_cliente_ori != -1){
+    if(valor > lt->clientes[indice_cliente_ori].saldo){
+      printf("Saldo insuficiente");
+      return 1;
+    }
+    else{
+        indice_cliente_dest = validar_cpf(cpf_verif_dest, lt);
+        if (indice_cliente_dest != -1){
+          verif_func = debitar(lt, indice_cliente_ori, valor);
+          verif_func = depositar(lt, indice_cliente_dest, valor);
+
+          printf("O valor %.2f foi transferido com sucesso.\nSaldo atual do cliente origem: %.2f \nSaldo atual do cliente destino: %.2f", valor, lt->clientes[indice_cliente_ori].saldo,lt->clientes[indice_cliente_dest].saldo);
+          return 0;        
+        }
+        else{
+          printf("CPF de destino incorreto");
+          return 1;
+        }
+      }
+  }
+  else{
+    printf("CPF, ou SENHA, da origem, incorretos");
+    return 1;
+  }
+}

@@ -45,12 +45,14 @@ int main()
                 break;
             case '5':
                 printf("\nEntrou na operacao 'Deposito'\n");
+                deposito(&ListaGeral);
                 break;
             case '6':
                 printf("\nEntrou na operacao 'Extrato'\n");
                 break;
             case '7':
                 printf("\nEntrou na operacao 'Transferencia'\n");
+                transferencia(&ListaGeral);  
                 break;
             default:
                 printf("\nOpcao invalida! Tente novamente");
