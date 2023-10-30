@@ -9,39 +9,57 @@ typedef struct {
     char senha[11];
 }Cliente; // Nomeando este tipo de struct como: Cliente
 
+
 //Definindo a struct que conterá as structs Cliente
 typedef struct {
     Cliente clientes[1001];
     int qtd;
 } ListaDeClientes; // Nomeando este tipo de struct como: ListaDeClientes
 
+
 //Função para cadastrar clientes, que recebe um ponteiro de ListaDeClientes como parâmetro e retorna um inteiro
 int cadastrar_cliente(ListaDeClientes *lt);
+
 
 //Função para listar clientes, que recebe um ponteiro de ListaDeClientes como parâmetro e retorna um inteiro
 int listar_clientes(ListaDeClientes lt);
 
+
+//Função para deletar clientes da ListaDeClientes, novamente usando ponteiro
 int excluir_conta(ListaDeClientes *lt, char *cpf_excluir, char *senha_excluir);
 
+
+// Função para validar CPF, que recebe um ponteiro para a string cpf e um ponteiro para ListaDeClientes como parâmetro e retorna um inteiro
 int validar_cpf(char* cpf, ListaDeClientes *lt);
 
+
+// Função para validar CPF e senha, que recebe ponteiros para as strings cpf_origem, senha_origem e um ponteiro para ListaDeClientes como parâmetro e retorna um inteiro
 int validar_cpf_senha(char* cpf_origem, char* senha_origem, ListaDeClientes* lista_clientes);
 
-/*int debito(ListaDeClientes *lt, int indice_cliente, float valor);*/
 
+// Função para realizar um depósito, que recebe um ponteiro para ListaDeClientes como parâmetro e retorna um inteiro
 int deposito(ListaDeClientes *lt);
 
+
+// Função para depositar um valor em uma conta específica, que recebe um ponteiro para ListaDeClientes, um inteiro indice_cliente e um float valor como parâmetros e retorna um inteiro
 int depositar(ListaDeClientes *lt, int indice_cliente, float valor);
 
+
+// Função para debitar um valor de uma conta específica, que recebe um ponteiro para ListaDeClientes, um inteiro indice_cliente e um float valor como parâmetros e retorna um inteiro
 int debitar(ListaDeClientes *lt, int indice_cliente, float valor);
 
-float debito(ListaDeClientes *lt);
-//int debito(ListaDeClientes *lt);
 
+// Função para verificar o débito total de uma ListaDeClientes, que recebe um ponteiro para ListaDeClientes como parâmetro e retorna um float
+float debito(ListaDeClientes *lt);
+
+
+// Função para realizar transferência entre contas, que recebe um ponteiro para ListaDeClientes como parâmetro e retorna um inteiro
 int transferencia(ListaDeClientes *lt);
+
 
 //Função para salvar clientes em um arquivo binário, que recebe um ponteiro de ListaDeTClientes como parâmetro e retorna um inteiro
 int salvarClientes(ListaDeClientes *lt);
+
 
 //Função para carregar clientes lidos do arquivo binário, que recebe um ponteiro de ListaDeClientes como parâmetro e retorna um inteiro
 int carregarClientes(ListaDeClientes *lt);
