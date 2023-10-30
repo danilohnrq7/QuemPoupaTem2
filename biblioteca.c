@@ -4,7 +4,9 @@
 
 // Função para validar o CPF
 int validar_cpf(char* cpf, ListaDeClientes *lt) {
+    //loop para iterar sobre os clientes da lista
     for (int x = 0; x < lt->qtd; x++) {
+        // Verifica se o CPF na posição atual é igual ao CPF fornecido
         if (strcmp(lt->clientes[x].cpf, cpf) == 0) {
             return x; // CPF já existe na lista
         }
@@ -12,27 +14,39 @@ int validar_cpf(char* cpf, ListaDeClientes *lt) {
     return -1; // CPF não existe na lista
 }
 
+//Função para validar cpf e senha
 int validar_cpf_senha(char* cpf_origem, char* senha_origem, ListaDeClientes* lista_clientes) {
+    //variavel para servir como controle
     int validador = -1;
+    //loop sobre os clientes da lista
     for (int x = 0; x < lista_clientes->qtd; x++) {
+        //varifica se o cpf e a senha digitados em alguma outra funcao coincidem
         if (strcmp(lista_clientes->clientes[x].cpf, cpf_origem) == 0 && strcmp(lista_clientes->clientes[x].senha, senha_origem) == 0) {
             validador = x;
         }
     }
+    //esse controle em outras funcoes ira validar se cpf e senha estao corretos ou nao para dar continuidade
     return validador;
 }
 
+//funcao para debitar valores de uma conta,  utilizada nas funcoes debito e tranferencia
 int debitar(ListaDeClientes *lt, int indice_cliente, float valor) {
+    //atribui os indices na ListaDeClientes aos seus respectivos clientes
     Cliente* cliente = &lt->clientes[indice_cliente];
+    //variavel para receber a taxa de acordo com o tipo da conta
     float taxa = 0;
+    //verifica o tipo de conta com string compare
     if (strcmp(cliente->tipo_conta, "2") == 0) {
         taxa = 0.03;
+        //verifica se o valor ultrapassa o saldo negativo
         if (lt->clientes[indice_cliente].saldo - (valor + (valor * taxa)) < -5000) {
             printf("Saldo insuficiente\n");
         } else {
+            //realiza o debito enquanto o valor nao ultrapassar o saldo negativo
             lt->clientes[indice_cliente].saldo -= (valor + (valor * taxa));
             return 0;
         }
+        //return 1 para interromper a funcao em questao
         return 1;
     }
     else if (strcmp(cliente->tipo_conta, "1") == 0) {
@@ -48,55 +62,27 @@ int debitar(ListaDeClientes *lt, int indice_cliente, float valor) {
 }
 
 
-float debito(ListaDeClientes *lt){
-    char cpf_verif[15];
-    char senha_verif[11];
-    float valor;
-    int verif_func;
-    int controle;
-    printf("Digite o valor que deseja debitar:\n");
-    scanf("%f", &valor);
-    getchar();
-    printf("Digite o CPF do cliente:\n");
-    scanf("%[^\n]", cpf_verif);
-    getchar();
-    printf("Digite a SENHA do cliente:\n");
-    scanf("%[^\n]", senha_verif);
-    getchar();
-    int indice_cliente = validar_cpf_senha(cpf_verif, senha_verif, lt);
-    if (indice_cliente != -1){
-        verif_func = debitar(lt, indice_cliente, valor);
-        if (verif_func == 0){
-            printf("O valor %.2f foi debitado com sucesso.\nSaldo atual: %.2f", valor, lt->clientes[indice_cliente].saldo);
-        }else{
-            printf("Ocorreu um erro ao debitar o valor.");
-        }
 
-        //Guardando a nova struct em um arquivo binário e verificando retorno da função
-        controle = salvarClientes(lt);
-        if (controle != 0){
-            printf("\nErro ao tentar executar a funcao :(\n");
-        }
-
-        return 0;
-        return 0;
-    }
-    else{
-        printf("CPF ou SENHA incorretos");
-        return 1;
-    }
-};
-
+//funcao depositar, utilizada nas funcoes deposito e tranferencia
 int depositar(ListaDeClientes *lt, int indice_cliente, float valor){
+    //adiciona valores ao saldo do cliente determinado
     lt->clientes[indice_cliente].saldo += valor;
     return 0;
 }
 
+
+// Acima estao as funcoes secundarias, que seroa chamadas para o funcionamento de outras funcoes
+
+//Abaixo as funcoes principais
+
+//Cadastrar clientes, utiliza o struct Cliente como estrutura
 int cadastrar_cliente(ListaDeClientes *lt){
+    //variaveis para verificacao
     char cpf_verif[15];
     int validacao_cpf;
     int controle;
 
+    //entradas do usuario
     printf("Digite o CPF do cliente: ");
     // Lendo o CPF do usuário
     printf("Digite o seu cpf: ");
@@ -138,6 +124,7 @@ int cadastrar_cliente(ListaDeClientes *lt){
     return 0;
 }
 
+//Listar Clientes
 int listar_clientes(ListaDeClientes lt){
     //Verificando se existe algum cadastro
     if (lt.qtd == 0){
@@ -146,6 +133,7 @@ int listar_clientes(ListaDeClientes lt){
     }
         //Caso exista
     else {
+        //loop para iterar sobre a lista de clientes e imprimilos no formato abaixo
         for (int i = 0; i < lt.qtd; i++) {
             printf("Nome: %s\n", lt.clientes[i].nome);
             printf("CPF : %s\n", lt.clientes[i].cpf);
@@ -158,17 +146,23 @@ int listar_clientes(ListaDeClientes lt){
     return 0;
 }
 
+
+//Excluir conta
 int excluir_conta(ListaDeClientes *lt, char *cpf_excluir, char *senha_excluir) {
+    //varriavel para verificacao
     int controle;
+    //entradas do usuario
     printf("Digite o CPF do cliente a ser excluído: ");
     scanf(" %[^\n]", cpf_excluir);
     printf("Digite a senha do cliente: ");
     scanf(" %[^\n]", senha_excluir);
+    //chama a funcao validar_cpf_senha
     int posicao_excluir = validar_cpf_senha(cpf_excluir, senha_excluir, lt);
     if (posicao_excluir == -1) {
         printf("CPF ou senha incorretos, ou conta não encontrada na lista de clientes.\n\n");
         return 1;
     } else {
+        //se as entradas existirem em ListaDeClientes, e estiverem corretas, os dados sao excluidos um a um
         for (int i = posicao_excluir; i < lt->qtd - 1; i++) {
             strcpy(lt->clientes[i].nome, lt->clientes[i + 1].nome);
             strcpy(lt->clientes[i].cpf, lt->clientes[i + 1].cpf);
@@ -187,38 +181,92 @@ int excluir_conta(ListaDeClientes *lt, char *cpf_excluir, char *senha_excluir) {
     };
 }
 
+//funcao para realizar o debito
+float debito(ListaDeClientes *lt){
+    //variaveis utilizadas para controle e/ou receber entradas do usuario (senha e cpf)
+    char cpf_verif[15];
+    char senha_verif[11];
+    float valor;
+    //verificar o retorno da funcao debitar
+    int verif_func;
+    int controle;
+    //entradas do usuario
+    printf("Digite o valor que deseja debitar:\n");
+    scanf("%f", &valor);
+    //getchars utilizados para limpar o buffer
+    getchar();
+    printf("Digite o CPF do cliente:\n");
+    scanf("%[^\n]", cpf_verif);
+    getchar();
+    printf("Digite a SENHA do cliente:\n");
+    scanf("%[^\n]", senha_verif);
+    getchar();
+    //chama a funcao validar_cpf_senha
+    int indice_cliente = validar_cpf_senha(cpf_verif, senha_verif, lt);
+    if (indice_cliente != -1){
+        //chama a funcao debitar e verifica o valor que ela retorna, sendo 0, da continuidade à funcao
+        verif_func = debitar(lt, indice_cliente, valor);
+        if (verif_func == 0){
+            printf("O valor %.2f foi debitado com sucesso.\nSaldo atual: %.2f", valor, lt->clientes[indice_cliente].saldo);
+        }else{
+            printf("Ocorreu um erro ao debitar o valor.");
+        }
 
+        //Guardando a nova struct em um arquivo binário e verificando retorno da função
+        controle = salvarClientes(lt);
+        if (controle != 0){
+            printf("\nErro ao tentar executar a funcao :(\n");
+        }
+
+        return 0;
+        return 0;
+    }
+    else{
+        printf("CPF ou SENHA incorretos");
+        return 1;
+    }
+};
+
+//funcao para realizar o deposito
 int deposito(ListaDeClientes *lt){
+    //variaveis utilizadas para controle e/ou receber entradas do usuario
     char cpf_verif[15];
     float valor;
     int verif_func;
     int controle;
+    //entradas do usuario
     printf("Digite o valor que deseja depositar:\n");
     scanf("%f", &valor);
     getchar();
     printf("Digite o CPF do cliente:\n");
     scanf("%[^\n]", cpf_verif);
     getchar();
+    //chama a funcao validar_cpf
     int indice_cliente = validar_cpf(cpf_verif, lt);
     if (indice_cliente != -1){
+        //chama a funcao depositar
         verif_func = depositar(lt, indice_cliente, valor);
         printf("O valor %.2f foi depositado com sucesso.\nSaldo atual: %.2f", valor, lt->clientes[indice_cliente].saldo);
+        //Guardando a nova struct em um arquivo binário e verificando retorno da função
+        controle = salvarClientes(lt);
+        if (controle != 0){
+            printf("\nErro ao tentar executar a funcao :(\n");
+        }
         return 0;
     }
     else{
         printf("CPF incorreto");
         return 1;
     }
-    //Guardando a nova struct em um arquivo binário e verificando retorno da função
-    controle = salvarClientes(lt);
-    if (controle != 0){
-        printf("\nErro ao tentar executar a funcao :(\n");
-    }
+
 
     return 0;
 }
 
+
+//funcao tranferencia entre contas
 int transferencia(ListaDeClientes *lt){
+    //variaveis utilizadas para controle e/ou receber entradas do usuario (senha e cpf)
     char cpf_verif_ori[15];
     char cpf_verif_dest[15];
     char senha_verif_ori[11];
@@ -227,7 +275,7 @@ int transferencia(ListaDeClientes *lt){
     float valor;
     int verif_func;
     int controle;
-
+//entradas do usuario
     printf("Digite o valor que deseja debitar:\n");
     scanf("%f", &valor);
     getchar();
@@ -243,20 +291,28 @@ int transferencia(ListaDeClientes *lt){
     printf("Digite o CPF do cliente destino:\n");
     scanf("%[^\n]", cpf_verif_dest);
     getchar();
-
+    //chamar a funcao validar_cpf_senha, para a conta de onde ira sair o valor
     indice_cliente_ori = validar_cpf_senha(cpf_verif_ori, senha_verif_ori, lt);
     if (indice_cliente_ori != -1){
+        //verifica se o saldo eh suficiente
         if(valor > lt->clientes[indice_cliente_ori].saldo){
             printf("Saldo insuficiente");
             return 1;
         }
         else{
+            //chama a funcao validar_cpf
             indice_cliente_dest = validar_cpf(cpf_verif_dest, lt);
             if (indice_cliente_dest != -1){
+                //chama as funcoes debitar e depositar para subtrair o valor de uma conta e adiciona-lo a outra
                 verif_func = debitar(lt, indice_cliente_ori, valor);
                 verif_func = depositar(lt, indice_cliente_dest, valor);
 
                 printf("O valor %.2f foi transferido com sucesso.\nSaldo atual do cliente origem: %.2f \nSaldo atual do cliente destino: %.2f", valor, lt->clientes[indice_cliente_ori].saldo,lt->clientes[indice_cliente_dest].saldo);
+                //Guardando a nova struct em um arquivo binário e verificando retorno da função
+                controle = salvarClientes(lt);
+                if (controle != 0){
+                    printf("\nErro ao tentar executar a funcao :(\n");
+                }
                 return 0;
             }
             else{
@@ -269,11 +325,7 @@ int transferencia(ListaDeClientes *lt){
         printf("CPF, ou SENHA, da origem, incorretos");
         return 1;
     }
-    //Guardando a nova struct em um arquivo binário e verificando retorno da função
-    controle = salvarClientes(lt);
-    if (controle != 0){
-        printf("\nErro ao tentar executar a funcao :(\n");
-    }
+
 
     return 0;
 }
