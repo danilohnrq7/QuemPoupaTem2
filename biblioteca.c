@@ -55,6 +55,9 @@ int debitar(ListaDeClientes *lt, int indice_cliente, float valor) {
             printf("Saldo insuficiente\n");
         } else {
             lt->clientes[indice_cliente].saldo -= (valor + (valor * taxa));
+
+            controle = gerarExtatos(lt, indice_cliente, "-", valor);
+            
             return 0;
         }
     }
@@ -67,6 +70,9 @@ int debitar(ListaDeClientes *lt, int indice_cliente, float valor) {
 int depositar(ListaDeClientes *lt, int indice_cliente, float valor){
     //adiciona valores ao saldo do cliente determinado
     lt->clientes[indice_cliente].saldo += valor;
+
+    controle = gerarExtatos(lt, indice_cliente, "+", valor);
+    
     return 0;
 }
 
@@ -328,6 +334,84 @@ int transferencia(ListaDeClientes *lt){
 
 
     return 0;
+}
+
+int gerarExtatos(ListaDeClientes *lt, int indiceCliente, char *tipo,
+                 float valor) {
+
+  int qtd = lt->clientes[indiceCliente].qtdExtratos;
+  
+  sprintf(lt->clientes[indiceCliente].extrato[qtd+1], "Operacao %d: %s %.2f", qtd+1, tipo, valor);
+  
+  lt->clientes[indiceCliente].qtdExtratos += 1;
+
+  return 0;
+}
+
+int Extatos(ListaDeClientes *lt, int indiceCliente) {
+
+  if (lt->clientes[indiceCliente].qtdExtratos > 0){
+
+  char nome_arquivo[17];
+  strcpy(nome_arquivo, lt->clientes[indiceCliente].cpf);
+  int qtd = lt->clientes[indiceCliente].qtdExtratos;
+  int cont = 0;
+
+  strcat(nome_arquivo, ".txt");
+  FILE *f = fopen(nome_arquivo, "w");
+
+  // Verificando se foi possível abrir e escrever o arquivo
+  if (f == NULL) {
+    printf("Erro ao escrever o arquivo.\n");
+    // Caso não seja possível abrir ou escrever o arquivo, retorna 1 encerrando
+    // a função
+    return 1;
+  }
+
+  while (qtd >= cont) {
+    fprintf(f, "%s\n", lt->clientes[indiceCliente].extrato[cont]);
+    cont++;
+  }
+
+  fclose(f);
+
+  return 0;
+  }
+  else {
+    return 1;
+  }
+  
+ }
+
+int chamarExtrato(ListaDeClientes *lt) {
+
+  char cpf_verif[15];
+  char senha_verif[11];
+  
+  printf("Digite o CPF do cliente:\n");
+  scanf("%[^\n]", cpf_verif);
+  getchar();
+  printf("Digite a SENHA do cliente:\n");
+  scanf("%[^\n]", senha_verif);
+  getchar();
+
+  
+  // chama a funcao validar_cpf_senha
+  int indice_cliente = validar_cpf_senha(cpf_verif, senha_verif, lt);
+  if (indice_cliente != -1) {
+    // chama a funcao Extatos
+    int controle = Extatos(lt, indice_cliente);
+    if (controle == 0) {
+      return 0;
+    
+    } else if (controle == 1){
+      printf("Nenhum extrato encontrado");
+      return 1;
+  }
+  }else {
+    printf("CPF ou SENHA incorretos");
+    return 1;
+  }
 }
 
 //Função para salvar as structs em um arquivo binário
