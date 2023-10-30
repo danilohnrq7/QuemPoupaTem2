@@ -21,7 +21,6 @@ int cadastrar_cliente(ListaDeClientes *lt);
 //Função para listar clientes, que recebe um ponteiro de ListaDeClientes como parâmetro e retorna um inteiro
 int listar_clientes(ListaDeClientes lt);
 
-//Fu
 int excluir_conta(ListaDeClientes *lt, char *cpf_excluir, char *senha_excluir);
 
 int validar_cpf(char* cpf, ListaDeClientes *lt);

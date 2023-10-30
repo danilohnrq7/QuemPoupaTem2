@@ -326,4 +326,4 @@ int carregarClientes(ListaDeClientes *lt){
     //Fechando o arquivo
     fclose(f);
     return 0;
-}
+};
