@@ -53,6 +53,7 @@ int main()
                 break;
             case '6':
                 printf("\nEntrou na operacao 'Extrato'\n");
+                chamarExtrato(&ListaGeral);
                 break;
             case '7':
                 printf("\nEntrou na operacao 'Transferencia'\n");
