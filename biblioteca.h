@@ -7,6 +7,8 @@ typedef struct {
     char tipo_conta[7];
     float saldo;
     char senha[11];
+    char extrato[100][1000];
+    int qtdExtratos;
 }Cliente; // Nomeando este tipo de struct como: Cliente
 
 
@@ -63,5 +65,11 @@ int salvarClientes(ListaDeClientes *lt);
 
 //Função para carregar clientes lidos do arquivo binário, que recebe um ponteiro de ListaDeClientes como parâmetro e retorna um inteiro
 int carregarClientes(ListaDeClientes *lt);
+
+int gerarExtatos(ListaDeClientes *lt, int indiceCliente, char *tipo, float valor);
+
+int Extatos(ListaDeClientes *lt, int indiceCliente);
+
+int chamarExtrato(ListaDeClientes *lt);
 
 #endif //QUEMPOUPATEM2_BIBLIOTECA_H
