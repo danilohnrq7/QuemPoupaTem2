@@ -29,44 +29,57 @@ int validar_cpf_senha(char* cpf_origem, char* senha_origem, ListaDeClientes* lis
     return validador;
 }
 
-//funcao para debitar valores de uma conta,  utilizada nas funcoes debito e tranferencia
-int debitar(ListaDeClientes *lt, int indice_cliente, float valor) {
-    //atribui os indices na ListaDeClientes aos seus respectivos clientes
-    Cliente* cliente = &lt->clientes[indice_cliente];
-    //variavel para receber a taxa de acordo com o tipo da conta
+// funcao para debitar valores de uma conta,  utilizada nas funcoes debito e
+// tranferencia
+int debitar(ListaDeClientes *lt, int indice_cliente, float valor, int tipo) {
+
+    int controle;
+    // atribui os indices na ListaDeClientes aos seus respectivos clientes
+    Cliente *cliente = &lt->clientes[indice_cliente];
+
+    // variavel para receber a taxa de acordo com o tipo da conta
     float taxa = 0;
-    //verifica o tipo de conta com string compare
+    // verifica o tipo de conta com string compare
     if (strcmp(cliente->tipo_conta, "2") == 0) {
-        taxa = 0.03;
-        //verifica se o valor ultrapassa o saldo negativo
+        if (tipo == 0){
+            taxa = 0.03;
+        }
+        // verifica se o valor ultrapassa o saldo negativo
         if (lt->clientes[indice_cliente].saldo - (valor + (valor * taxa)) < -5000) {
             printf("Saldo insuficiente\n");
         } else {
-            //realiza o debito enquanto o valor nao ultrapassar o saldo negativo
+            // realiza o debito enquanto o valor nao ultrapassar o saldo negativo
             lt->clientes[indice_cliente].saldo -= (valor + (valor * taxa));
+
+            controle = gerarExtatos(lt, indice_cliente, tipo, valor, "-");
+
             return 0;
         }
-        //return 1 para interromper a funcao em questao
+        // return 1 para interromper a funcao em questao
         return 1;
-    }
-    else if (strcmp(cliente->tipo_conta, "1") == 0) {
-        taxa = 0.05;
+    } else if (strcmp(cliente->tipo_conta, "1") == 0) {
+        if (tipo == 0){
+            taxa = 0.05;
+        }
         if (lt->clientes[indice_cliente].saldo - (valor + (valor * taxa)) < -1000) {
             printf("Saldo insuficiente\n");
         } else {
             lt->clientes[indice_cliente].saldo -= (valor + (valor * taxa));
+
+            controle = gerarExtatos(lt, indice_cliente, tipo, valor, "-");
+
             return 0;
         }
     }
     return 1;
 }
 
-
-
-//funcao depositar, utilizada nas funcoes deposito e tranferencia
-int depositar(ListaDeClientes *lt, int indice_cliente, float valor){
-    //adiciona valores ao saldo do cliente determinado
+// funcao depositar, utilizada nas funcoes deposito e tranferencia
+int depositar(ListaDeClientes *lt, int indice_cliente, float valor) {
+    int controle;
+    // adiciona valores ao saldo do cliente determinado
     lt->clientes[indice_cliente].saldo += valor;
+    controle = gerarExtatos(lt, indice_cliente, 1, valor, "+");
     return 0;
 }
 
@@ -113,7 +126,9 @@ int cadastrar_cliente(ListaDeClientes *lt){
     if (controle != 0){
         printf("\nErro ao tentar executar a funcao :(\n");
     }*/
-    printf("\nSeja bem vindo %s! Seu cadastro foi realizado com sucesso\n",lt->clientes[lt->qtd-1].nome);
+    printf("\nSeja bem vindo(a) %s! Seu cadastro foi realizado com sucesso\n",lt->clientes[lt->qtd-1].nome);
+
+    lt->clientes[lt->qtd].qtdExtratos = 0;
 
     //Guardando a nova struct em um arquivo binário e verificando retorno da função
     controle = salvarClientes(lt);
@@ -205,7 +220,8 @@ float debito(ListaDeClientes *lt){
     int indice_cliente = validar_cpf_senha(cpf_verif, senha_verif, lt);
     if (indice_cliente != -1){
         //chama a funcao debitar e verifica o valor que ela retorna, sendo 0, da continuidade à funcao
-        verif_func = debitar(lt, indice_cliente, valor);
+
+        verif_func = debitar(lt, indice_cliente, valor, 0);
         if (verif_func == 0){
             printf("O valor %.2f foi debitado com sucesso.\nSaldo atual: %.2f", valor, lt->clientes[indice_cliente].saldo);
         }else{
@@ -218,7 +234,6 @@ float debito(ListaDeClientes *lt){
             printf("\nErro ao tentar executar a funcao :(\n");
         }
 
-        return 0;
         return 0;
     }
     else{
@@ -304,7 +319,7 @@ int transferencia(ListaDeClientes *lt){
             indice_cliente_dest = validar_cpf(cpf_verif_dest, lt);
             if (indice_cliente_dest != -1){
                 //chama as funcoes debitar e depositar para subtrair o valor de uma conta e adiciona-lo a outra
-                verif_func = debitar(lt, indice_cliente_ori, valor);
+                verif_func = debitar(lt, indice_cliente_ori, valor, 1);
                 verif_func = depositar(lt, indice_cliente_dest, valor);
 
                 printf("O valor %.2f foi transferido com sucesso.\nSaldo atual do cliente origem: %.2f \nSaldo atual do cliente destino: %.2f", valor, lt->clientes[indice_cliente_ori].saldo,lt->clientes[indice_cliente_dest].saldo);
@@ -378,4 +393,126 @@ int carregarClientes(ListaDeClientes *lt){
     //Fechando o arquivo
     fclose(f);
     return 0;
-};
+}
+
+int gerarExtatos(ListaDeClientes *lt, int indiceCliente, int tipo,float valor, char *op) {
+    // qtd recebe os extratos
+    int qtd = lt->clientes[indiceCliente].qtdExtratos;
+    //verifica  a qtd limimte foi atingida
+    if(qtd == 100) {
+        // for para iterar sobre todas as operacoes
+        for (int i = 0; i < 100; i++) {
+            // Desloca os extratos antigos para abrir espaço para o novo extrato
+            strcpy(lt->clientes[indiceCliente].extrato[i], lt->clientes[indiceCliente].extrato[i+1]);
+        }
+        //decrementa a qtd de extratos
+        qtd--;
+    }
+
+    //verifica qual operacao foi realizada - ou +
+    if (tipo == 0){
+
+        float taxa = 0;
+        //verifica o tipo de conta do cliente
+        if (strcmp(lt->clientes[indiceCliente].tipo_conta, "2") == 0) {
+            taxa = 0.03;
+        }
+        else {
+            taxa = 0.05;
+        }
+        //adicionando a taxa ao valor debitado
+        taxa = taxa * valor;
+        valor += taxa;
+        //imprime a operacao de saida de valores
+        sprintf(lt->clientes[indiceCliente].extrato[qtd], "Operacao: %s %.2f | Taxa: %.2f", op, valor, taxa);
+
+    }
+    else {
+        //registra no extrato as operacoes de entrada de valores
+        sprintf(lt->clientes[indiceCliente].extrato[qtd], "Operacao: %s %.2f", op, valor);
+
+    }
+    //verifica se a qtd de extratos é menor que 100 e atualiza
+    if(lt->clientes[indiceCliente].qtdExtratos < 100) {
+        lt->clientes[indiceCliente].qtdExtratos += 1;
+    }
+    return 0;
+}
+
+int Extatos(ListaDeClientes *lt, int indiceCliente) {
+    //verifica se o cliente possui extratos
+    if (lt->clientes[indiceCliente].qtdExtratos > 0){
+
+        //variaveis para controle e/ou verificacao
+        char nome_arquivo[17];
+        //variavel nome_arquivo recebe o cpf de um cliente
+        strcpy(nome_arquivo, lt->clientes[indiceCliente].cpf);
+        int qtd = lt->clientes[indiceCliente].qtdExtratos;
+        int cont = 0;
+
+        //A variavel nome arquivo recebe a extensao .txt
+        strcat(nome_arquivo, ".txt");
+        //abre o arquivo com nome "cpf.txt"
+        FILE *f = fopen(nome_arquivo, "w");
+
+        // Verificando se foi possível abrir e escrever o arquivo
+        if (f == NULL) {
+            printf("Erro ao escrever o arquivo.\n");
+            // Caso não seja possível abrir ou escrever o arquivo, retorna 1 encerrando
+            // a função
+            return 1;
+        }
+        // loop enqunto a qtd de extratos for maior/igual que o contador
+        while (qtd >= cont) {
+            //ecrevendo no arquivo o extrato
+            fprintf(f, "%s\n", lt->clientes[indiceCliente].extrato[cont]);
+            //incrementando o contador
+            cont++;
+        }
+        //fecha o arquivo
+        fclose(f);
+
+        return 0;
+    }
+    else {
+        return 1;
+    }
+
+}
+
+int chamarExtrato(ListaDeClientes *lt) {
+// variaveis para verificacao
+    char cpf_verif[15];
+    char senha_verif[11];
+    //entradas do usuario
+    printf("Digite o CPF do cliente:\n");
+    scanf("%[^\n]", cpf_verif);
+    getchar();
+    printf("Digite a SENHA do cliente:\n");
+    scanf("%[^\n]", senha_verif);
+    getchar();
+
+
+    // chama a funcao validar_cpf_senha
+    int indice_cliente = validar_cpf_senha(cpf_verif, senha_verif, lt);
+    if (indice_cliente != -1) {
+        // chama a funcao Extatos
+        int controle = Extatos(lt, indice_cliente);
+        //o retorno da funcao eh 0 se o arquivo foi criado com sucesso
+        if (controle == 0) {
+            //
+            printf("Arquivo gerado com sucesso");
+            return 0;
+
+        } else if (controle == 1){
+            //Se o retorno for 1 eh porque o arquivo nao foi criado
+            printf("Nenhum extrato encontrado");
+            //return 1 para identifcar erro na operacao
+            return 1;
+        }
+    }else {
+        printf("CPF ou SENHA incorretos");
+        //return 1 para identifcar erro na operacao
+        return 1;
+    }
+}
