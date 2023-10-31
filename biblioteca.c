@@ -291,7 +291,7 @@ int transferencia(ListaDeClientes *lt){
     int verif_func;
     int controle;
 //entradas do usuario
-    printf("Digite o valor que deseja transferir:\n");
+    printf("Digite o valor que deseja transferir: \n");
     scanf("%f", &valor);
     getchar();
 
