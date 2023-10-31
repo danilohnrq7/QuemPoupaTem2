@@ -1,3 +1,6 @@
+// Danilo Henrique de Paulo  RA 22.222.008-9
+// Pedro Henrique Correia de Oliveira  RA 22.222.009-7
+
 #include <stdio.h>
 #include "biblioteca.h"
 int main()
@@ -56,6 +59,7 @@ int main()
                 chamarExtrato(&ListaGeral);
                 break;
             case '7':
+
                 printf("\nEntrou na operacao 'Transferencia'\n");
                 transferencia(&ListaGeral);
                 break;

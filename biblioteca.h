@@ -7,14 +7,14 @@ typedef struct {
     char tipo_conta[7];
     float saldo;
     char senha[11];
-    char extrato[100][1000];
+    char extrato[100][40];
     int qtdExtratos;
 }Cliente; // Nomeando este tipo de struct como: Cliente
 
 
 //Definindo a struct que conterá as structs Cliente
 typedef struct {
-    Cliente clientes[1001];
+    Cliente clientes[1000];
     int qtd;
 } ListaDeClientes; // Nomeando este tipo de struct como: ListaDeClientes
 
@@ -48,7 +48,7 @@ int depositar(ListaDeClientes *lt, int indice_cliente, float valor);
 
 
 // Função para debitar um valor de uma conta específica, que recebe um ponteiro para ListaDeClientes, um inteiro indice_cliente e um float valor como parâmetros e retorna um inteiro
-int debitar(ListaDeClientes *lt, int indice_cliente, float valor);
+int debitar(ListaDeClientes *lt, int indice_cliente, float valor, int tipo);
 
 
 // Função para verificar o débito total de uma ListaDeClientes, que recebe um ponteiro para ListaDeClientes como parâmetro e retorna um float
@@ -66,10 +66,16 @@ int salvarClientes(ListaDeClientes *lt);
 //Função para carregar clientes lidos do arquivo binário, que recebe um ponteiro de ListaDeClientes como parâmetro e retorna um inteiro
 int carregarClientes(ListaDeClientes *lt);
 
-int gerarExtatos(ListaDeClientes *lt, int indiceCliente, char *tipo, float valor);
 
+// Função para gerar extratos de clientes
+int gerarExtatos(ListaDeClientes *lt, int indiceCliente, int tipo, float valor, char *op);
+
+
+//funcao para escrever os extratos em um arquivo exclusivo à cada cliente
 int Extatos(ListaDeClientes *lt, int indiceCliente);
 
+
+// Função para chamar o extrato de clientes, recebe um ponteiro para ListaDeClientes
 int chamarExtrato(ListaDeClientes *lt);
 
 #endif //QUEMPOUPATEM2_BIBLIOTECA_H
